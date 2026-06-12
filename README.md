@@ -1,30 +1,64 @@
-# DecodeLabs Project 1 - FastAPI REST API
+# DecodeLabs Internship Project - FastAPI REST API
 
 ## Overview
 
-This project is a simple REST API built using FastAPI. It demonstrates the implementation of basic API endpoints, request validation using Pydantic, and proper HTTP methods.
+This project is a REST API built using **FastAPI**.  
+It demonstrates backend development concepts including:
+
+- CRUD operations
+- Database integration (SQLite + SQLAlchemy ORM)
+- User authentication
+- Password hashing (Argon2)
+- JWT-based authorization
+- Protected routes
+
+---
 
 ## Features
 
-* Home endpoint
-* Get all products
-* Create a new product
-* Request validation with Pydantic
-* Interactive API documentation with Swagger UI
+### Core Features
+- User registration
+- User login
+- Full CRUD operations (Create, Read, Update, Delete)
+- Request validation using Pydantic
+- SQLite database persistence
+
+### Security Features
+- Password hashing using **Argon2**
+- JWT authentication
+- Protected routes requiring valid token
+
+### Developer Features
+- Auto-generated Swagger UI documentation
+- Modular project structure
+- ORM-based database handling (SQLAlchemy)
+
+---
 
 ## Technologies Used
 
-* Python 3.x
-* FastAPI
-* Uvicorn
-* Pydantic
+- Python 3.x
+- FastAPI
+- Uvicorn
+- SQLAlchemy
+- SQLite
+- Pydantic
+- Argon2-cffi
+- Python-JOSE (JWT)
+
+---
 
 ## Project Structure
 
 ```text
-project1-api/
+project_1/
 │
 ├── main.py
+├── models.py
+├── schemas.py
+├── crud.py
+├── database.py
+├── auth.py
 ├── requirements.txt
 └── README.md
 ```
@@ -67,56 +101,6 @@ The API will be available at:
 http://127.0.0.1:8000
 ```
 
-## API Endpoints
-
-### GET /
-
-Returns a welcome message.
-
-Response:
-
-```json
-{
-  "message": "Welcome to DecodeLabs Project 1 API"
-}
-```
-
-### GET /products
-
-Returns a list of products.
-
-Response:
-
-```json
-{
-  "products": []
-}
-```
-
-### POST /products
-
-Creates a new product.
-
-Request Body:
-
-```json
-{
-  "name": "Laptop",
-  "price": 999.99
-}
-```
-
-Response:
-
-```json
-{
-  "message": "Product created successfully",
-  "product": {
-    "name": "Laptop",
-    "price": 999.99
-  }
-}
-```
 
 ## API Documentation
 

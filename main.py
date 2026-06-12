@@ -1,13 +1,15 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-import models
+import models, crud, schemas
 from database import engine, SessionLocal
-import crud, schemas
+from auth import create_access_token
+from auth import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
 
 def get_db():
     db = SessionLocal()
@@ -16,35 +18,34 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/users")
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+
+@app.post("/register")
+def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     result = crud.create_user(db, user)
-    if result is None:
+    if not result:
         raise HTTPException(status_code=400, detail="Email already exists")
     return result
 
-@app.get("/users")
-def read_users(db: Session = Depends(get_db)):
-    return crud.get_users(db)
-
-@app.get("/users/{user_id}")
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    user = crud.get_user(db, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-@app.put("/users/{user_id}")
-def update_user(user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
-    updated = crud.update_user(db, user_id, user)
-    if not updated:
-        raise HTTPException(status_code=404, detail="User not found")
-    return updated
 
 
-@app.delete("/users/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db)):
-    success = crud.delete_user(db, user_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"message": "Deleted successfully"}
+
+@app.post("/login")
+def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
+    db_user = crud.authenticate_user(db, user.email, user.password)
+
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    token = create_access_token({"sub": str(db_user.id)})
+
+    return {"access_token": token, "token_type": "bearer"}
+
+
+
+
+@app.get("/protected")
+def protected_route(user_id: str = Depends(get_current_user)):
+    return {
+        "message": "You are authenticated!",
+        "user_id": user_id
+    }

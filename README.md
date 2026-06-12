@@ -68,8 +68,8 @@ project_1/
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd project1-api
+git clone https://github.com/omar2301433/DecodeLabs-Internship-Project-3
+cd DecodeLabs-Internship-Project-3
 ```
 
 2. Create a virtual environment:
